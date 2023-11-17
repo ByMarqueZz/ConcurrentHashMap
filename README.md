@@ -2,7 +2,7 @@
 
 Componentes: Juán Antonio, Félix, Jose María, Víctor.
 
-Estructura concurrente: LinkedUniqueHashMap
+Estructura concurrente: ConcurrentHashMap
 
 Descripción de la estructura: 
 
