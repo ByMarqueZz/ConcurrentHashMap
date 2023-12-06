@@ -1,4 +1,5 @@
 #PROYECTO ESTRUCTURAS CONCURRENTES
+
 Componentes: Juán Antonio, Félix, Jose María, Víctor.
 
 Estructura concurrente: ConcurrentHashMap
@@ -68,5 +69,6 @@ Tabla con los métodos de interés
         <td>Si la clave está presente, realiza una llamada a la función de remapeo y actualiza el valor en el mapa.</td>
     </tr>
 </table>
+
 
 Descripción de los ficheros del proyecto
