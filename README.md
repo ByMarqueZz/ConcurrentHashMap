@@ -1,16 +1,80 @@
-#PROYECTO ESTRUCTURAS CONCURRENTES
+# PROYECTO ESTRUCTURAS CONCURRENTES
 
-Componentes: Juán Antonio, Félix, Jose María, Víctor.
+### Componentes: 
+Juán Antonio Márquez, Félix, Jose María, Víctor.
 
-Estructura concurrente: ConcurrentHashMap
+### Estructura concurrente: 
+ConcurrentHashMap
 
-Descripción de la estructura:
+### Descripción de la estructura: 
+ConcurrentHashMap es una estructura de 
+datos en Java diseñada para soportar operaciones concurrentes sin necesidad 
+de utilizar bloqueos explícitos, como los que se usarían en un HashMap convencional.
 
-Introducción
+## Introducción
 
-Casos de uso
+## Casos de uso
+### Acceso Concurrente y Modificación Segura:
+El ConcurrentHashMap es ideal cuando varios hilos necesitan acceder y modificar el mapa simultáneamente. 
+Proporciona operaciones seguras sin necesidad de bloquear todo el mapa.
+```java
+ConcurrentHashMap<String, Integer> map = new ConcurrentHashMap<>();
+map.put("A", 1);
+map.put("B", 2);
+```
 
-Tabla con los métodos de interés
+### Evitar Bloqueos Costosos:
+ConcurrentHashMap permite la lectura simultánea de diferentes 
+secciones del mapa sin bloquear 
+el acceso a otras partes de la estructura
+```java
+int value = concurrentMap.getOrDefault("C", 0);
+```
+
+### Operaciones Atómicas:
+Métodos como putIfAbsent, replace, compute, computeIfAbsent, y computeIfPresent son operaciones atómicas, 
+lo que significa que se ejecutan de manera segura y completa sin intervención de otros hilos.
+```java
+concurrentMap.putIfAbsent("C", 3);
+concurrentMap.replace("B", 2, 20);
+```
+
+### Iteración Concurrente:
+El método forEach permite la iteración sobre las entradas del mapa de manera segura en un entorno concurrente,
+ya que utiliza mecanismos internos para garantizar la consistencia.
+```java
+concurrentMap.forEach((key, val) -> System.out.println(key + ": " + val));
+```
+
+### Reducción Paralela:
+El método reduce permite realizar operaciones de reducción de manera paralela en los valores del mapa. Es útil cuando se trabaja con 
+grandes conjuntos de datos y se busca mejorar el rendimiento a través de la concurrencia.
+```java
+int total = concurrentMap.reduceValues(2, Integer::sum);
+```
+
+### Búsqueda Concurrente:
+El método search facilita la búsqueda concurrente de una clave y un valor asociado utilizando una función de búsqueda personalizada.
+```java
+String result = concurrentMap.search(2, (key, val) -> {
+    val > 10 ? key : null
+});
+```
+
+### Manipulación de Conjuntos Concurrentes:
+El método newKeySet devuelve un conjunto concurrente respaldado por el mapa, lo que significa que cualquier cambio en el mapa se reflejará automáticamente en el conjunto y viceversa.
+```java
+ConcurrentHashMap.KeySetView<String, Boolean> keySet = concurrentMap.newKeySet();
+```
+
+### Reemplazo Condicional:
+Los métodos replace y remove permiten reemplazar o eliminar una entrada condicionalmente, basándose en el valor actual asociado con la clave.
+```java
+concurrentMap.replace("A", 1, 100);
+concurrentMap.remove("B", 20);
+```
+
+## Tabla con los métodos de interés
 <table>
     <tr>
         <th>Método</th>
@@ -71,4 +135,4 @@ Tabla con los métodos de interés
 </table>
 
 
-Descripción de los ficheros del proyecto
+## Descripción de los ficheros del proyecto
