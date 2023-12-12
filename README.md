@@ -159,6 +159,7 @@ El método search facilita la búsqueda concurrente de una clave y un valor asoc
 String result = concurrentMap.search(2, (key, val) -> {
     val > 10 ? key : null
 });
+```
 
 La operación que se está realizando es una búsqueda en el mapa utilizando el valor inicial 2 y una función de búsqueda, la cual devuelve la clave si el valor asociado es mayor que 10; de lo contrario, devuelve null.
 
