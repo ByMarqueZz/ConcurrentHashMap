@@ -6,7 +6,7 @@ public class Concert {
     public Concert(int numberOfTickets) {
         availableTickets = new ConcurrentHashMap<>();
         for (int i = 0; i < numberOfTickets; i++) {
-            availableTickets.put(i, new Ticket(i));
+            availableTickets.put(i + 1, new Ticket(i + 1));
         }
     }
 
@@ -38,5 +38,6 @@ public class Concert {
                 System.out.println("Ticket: " + key + ", Reservado: " + value.isReserved() + ", " + value.getCustomer());
             }
         });
+        System.out.println("________________________________");
     }
 }
