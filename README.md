@@ -12,6 +12,52 @@ datos en Java diseñada para soportar operaciones concurrentes sin necesidad
 de utilizar bloqueos explícitos, como los que se usarían en un HashMap convencional.
 
 ## Introducción
+ConcurrentHashMap. En el constante flujo de la evolución tecnológica, donde la
+paralelización y la concurrencia se han vuelto la norma más que la excepción,
+entender cómo gestionar eficientemente datos compartidos entre múltiples hilos se
+vuelve imperativo.
+### Orígenes de ConcurrentHashMap:
+La historia de ConcurrentHashMap se remonta a la necesidad crítica de abordar los
+desafíos de la concurrencia en aplicaciones Java. Esta estructura de datos se
+introdujo por primera vez en Java 5 como parte del paquete java.util.concurrent. Su
+creación fue una respuesta a las limitaciones observadas en otras
+implementaciones de Map en entornos multi-hilo, como HashMap, que no estaban
+diseñadas para manejar de manera segura operaciones concurrentes sin una
+sincronización externa.
+
+La motivación detrás de ConcurrentHashMap radica en proporcionar una solución
+eficiente y segura para escenarios donde múltiples hilos intentan acceder y
+modificar simultáneamente una estructura de datos compartida. Surge como una
+mejora significativa sobre Hashtable y otros mecanismos de sincronización,
+minimizando el bloqueo generalizado y permitiendo un rendimiento más escalable
+en entornos con alta concurrencia.
+### Características Clave:
+Lo que distingue a ConcurrentHashMap es su capacidad para admitir múltiples
+operaciones de lectura concurrentes sin bloqueo, al tiempo que proporciona un
+mecanismo seguro y eficiente para operaciones de escritura. Logra esto mediante el
+uso de segmentos internos y técnicas avanzadas de gestión de bloqueo,
+permitiendo que múltiples hilos realicen operaciones simultáneamente en diferentes
+segmentos de la estructura, reduciendo así la necesidad de bloquear la estructura
+completa.
+### Implementación y Funcionamiento:
+A medida que profundizamos en nuestra exposición, exploraremos la
+implementación interna de ConcurrentHashMap, analizando cómo se gestionan las
+colisiones, cómo se distribuyen las claves y cómo se garantiza la coherencia en
+operaciones concurrentes.
+### Escenarios de Uso Práctico:
+
+Además, abordaremos los escenarios de uso práctico donde ConcurrentHashMap
+brilla con luz propia. Desde aplicaciones de alto rendimiento en sistemas
+distribuidos hasta su papel fundamental en la gestión de caches, entenderemos
+cómo esta estructura de datos se ha convertido en una herramienta esencial en el kit
+de desarrollo de aplicaciones concurrentes en Java.
+
+En resumen, lo que exploraremos hoy es más que una estructura de datos; es un
+componente clave en la arquitectura de software moderna que nos permite navegar
+por el desafiante terreno de la concurrencia con confianza y eficiencia. ¡Sin más
+demora, sumerjámonos en el fascinante mundo de ConcurrentHashMap y
+descubramos cómo transforma la complejidad de la concurrencia en una elegante
+solución para desarrolladores Java!
 
 ## Casos de uso
 ### Acceso Concurrente y Modificación Segura:
@@ -121,70 +167,71 @@ concurrentMap.remove("B", 20);
 </table>
 
 ## Descripción de los ficheros del proyecto
-Nuestro proyecto alberga una clase Main , en la cual se prueban algunos de los métodos más importantes de la estructura que hemos elegido , ConcurrentHashMap.
+## Concert
 
-Esta estructura es ideal cuando varios hilos necesitan acceder y modificar el mapa simultáneamente proporciona operaciones seguras sin necesidad de bloquear todo el mapa , como se puede ver en el siguiente ejemplo
-```java
-ConcurrentHashMap<String, Integer> map = new ConcurrentHashMap<>();
-map.put("A", 1);
-map.put("B", 2);
-```
+La clase Concert representa un concierto y se encarga de gestionar la reserva de entradas para los clientes. Ahora , veremos en detalle cada una de las partes de esta clase
 
-Además , permite leer de forma simultánea las diferentes secciones del mapa sin bloquear el acceso a otras partes de la estructura
-```java
-int value = concurrentMap.getOrDefault("C", 0);
-```
+__Atributo availableTickets__: Objeto de tipo ConcurrentHashMap, la clave del mapa es un entero (ID del ticket) y el valor es un objeto de tipo Ticket.
 
-Las operaciones atómicas también existen este tipo de estructura , de la mano de los métodos putIfAbsent(), replace() , compute() , computeIfAbsent(), y computeIfPresent(). Estos métodos se ejecutan de manera segura y completa , sin intervención de otros hilos. En este caso 
+__Constructor Concert__: Este constructor crea un nuevo concierto con un número específico de entradas . Se inicializa el ConcurrentHashMap y se llenan las entradas en un bucle for utilizando un ID de ticket como clave y un nuevo objeto Ticket como valor.
 
-```java
-concurrentMap.putIfAbsent("C", 3);
-```
-Esta línea de código intenta agregar una entrada al mapa concurrentMap solo si la clave "C" no está presente. Si "C" ya está en el mapa, esta operación no tiene ningún efecto. Si "C" no está en el mapa, se agregará con el valor asociado de 3
+__Método reservedTicket__: Este método permite a un cliente reservar un ticket para el concierto. Primero, se obtiene una vista de las claves del mapa utilizando keySet(). Luego, se utiliza stream() para procesar las claves de manera funcional. Se filtran los tickets no reservados, se encuentra el primero disponible usando findFirst(), y se actualiza su estado a reservado asignando al cliente actual (customer) y marcando el ticket como reservado. Si no hay tickets disponibles, se imprime un mensaje indicando que no hay tickets disponibles para ese cliente.
+
+__Método showTickets()__: Muestra una representación visual de los tickets disponibles y sus estados (reservado o no). Itera sobre el ConcurrentHashMap y, para cada ticket, imprime su ID, estado de reserva y, si está reservado, el cliente que lo reservó.
+
+Concert posibilita la gestión de tickets de un concierto, permitiendo la reserva de tickets por parte de los clientes y mostrando el estado actual de los tickets.
 
 
-```java
-concurrentMap.replace("B", 2, 20);
-```
-Esta línea de código intenta reemplazar el valor asociado con la clave "B" en el mapa concurrentMap. Sin embargo, solo realizará el reemplazo si el valor actual asociado con "B" es igual a 2
+## Customer
 
+Esta clase Customer extiende la clase Thread, lo que conlleva que cada objeto Customer puede ejecutar su propia secuencia de instrucciones de manera independiente en un hilo separado. Está diseñada para representar a un cliente que quiere reservar un ticket para un concierto. Entrando más en detalle:
 
-El método reduce() permite realizar operaciones de reducción de manera paralela en los valores del mapa. Es útil cuando se trabaja con grandes conjuntos de datos y se busca mejorar el rendimiento a través de la concurrencia.En nuestro caso , se realizará una reducción acumulativa de los valores del mapa usando la operación de suma (Integer::sum), y el valor inicial del acumulador será 2.
-```java
-int total = concurrentMap.reduceValues(2, Integer::sum);
-```
+__Atributo name__: Nombre del cliente.
 
-El método search facilita la búsqueda concurrente de una clave y un valor asociado utilizando una función de búsqueda personalizada.
-```java
-String result = concurrentMap.search(2, (key, val) -> {
-    val > 10 ? key : null
-});
-```
+__Atributo concert__: Referencia al objeto Concert, que representa el concierto al que el cliente desea asistir.
 
-La operación que se está realizando es una búsqueda en el mapa utilizando el valor inicial 2 y una función de búsqueda, la cual devuelve la clave si el valor asociado es mayor que 10; de lo contrario, devuelve null.
+__Constructor__:Recibe el nombre del cliente y una referencia al objeto Concert, además de inicializar los atributos name y concert.
 
-El método newKeySet() devuelve un conjunto concurrente respaldado por el mapa, lo que significa que cualquier cambio en el mapa se reflejará automáticamente en el conjunto y viceversa.
-```java
-ConcurrentHashMap.KeySetView<String, Boolean> keySet = concurrentMap.newKeySet();
-```
-En nuestro caso de uso utiliza el método anteriormente explicado para obtener una vista concurrente de las claves del mapa.Esa vista proporciona operaciones de conjunto Set en un contexto concurrente, lo que significa que puedes realizar operaciones como add, remove, e iterar sobre las claves de manera segura en un entorno con múltiples hilos de ejecución
+__Método run()__:Método invocado cuando se inicia un nuevo hilo para un objeto Customer.Llama al método reservedTicket() del objeto Concert al que el cliente está asociado. Esto simula que el cliente está intentando reservar un ticket para el concierto.
 
-Por último , los métodos replace() y remove() permiten reemplazar o eliminar una entrada condicionalmente, basándose en el valor actual asociado con la clave.
-```java
-concurrentMap.replace("A", 1, 100);
-concurrentMap.remove("B", 20);
-```
+__Método toString()__:Devuelve el nombre del cliente.
 
-El primer método intenta reemplazar el valor asociado con la clave "A" en el concurrentMap. Sin embargo, solo realizará el reemplazo si el valor actual asociado con "A" es igual a 1. Si el valor actual no es 1, la operación no tendrá éxito y no se realizará ningún cambio en el mapa.
-
-- Si el valor actual es 1, se reemplazará con 100.
-
-El segundo de ellos intenta eliminar la entrada del mapa que tiene la clave "B" y el valor asociado igual a 20. La eliminación solo se realizará si la clave "B" está presente en el mapa y si el valor actual asociado con "B" es igual a 20.
-
-- Si la clave "B" está presente y el valor es 20, la entrada correspondiente se eliminará del mapa.
+La clase Customer simboliza un cliente que puede ejecutar su lógica de reserva de tickets en un hilo separado. Al llamar al método run(), el cliente intenta reservar un ticket para el concierto al que está asociado, utilizando el método reservedTicket() del objeto Concert. La idea es simular la concurrencia de múltiples clientes intentando reservar tickets para el concierto al mismo tiempo.
 
 
 
+## Ticket
+
+Por último, esta clase representa un boleto para el concierto.
+
+Atributos
+
+__id__: Identificador único del boleto.
+
+__reserved__: Objeto de tipo AtomicBoolean, que proporciona operaciones atómicas para la variable booleana reserved. Nos es útil para evitar problemas de concurrencia.
+
+__customer__: Referencia al objeto Customer que reservó el boleto. Puede ser null si el boleto no está reservado.
+
+
+__Constructor Ticket__: Inicializa el identificador y crea un nuevo AtomicBoolean con valor inicial false para el estado de reserva del boleto. Además, inicializa el cliente como null.
+
+
+__Método getId()__: Devuelve el identificador del boleto.
+
+__Método isReserved()__: Devuelve true si el boleto está reservado y false en caso contrario.
+
+
+__Método setReserved__:Establece el estado de reserva del boleto
+
+__Método getCustomer()__:Devuelve el objeto Customer asociado con el boleto. Puede devolver null si el boleto no está reservado.
+
+__Método setCustomer__:Asigna el objeto Customer que ha reservado el boleto. Este método se llama cuando un cliente reserva un ticket.
+
+
+Para concluir esta última clase  , se puede resumir en la representación de la información asociada a un boleto, incluyendo su identificador, estado de reserva y el cliente que lo ha reservado. La utilización de AtomicBoolean para gestionar la reserva garantiza una manipulación segura y atómica del estado de reserva,  lo cual es relevante en el contexto del sistema de conciertos que involucra la concurrencia de múltiples clientes.
 
 
 
+## Main
+
+La clase Main tiene un solo objetivo , el cual es simular el funcionamiento del programa , creando un concierto con 10 tickets disponibles , según se aprecia en la creación de dicho objeto; a continuación , se crea una colección de clientes , que van a comprar el ticket cuando se ejecuta el método start() , para que más tarde se coordinen todos los hilos mediante el método join() , y finalmente se muestre el estado de los tickets
