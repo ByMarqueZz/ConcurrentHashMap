@@ -1,4 +1,4 @@
-# PROYECTO ESTRUCTURAS CONCURRENTES
+# ConcurrentHashMap
 
 ### Componentes: 
 Juán Antonio Márquez, Félix, Jose María, Víctor.
@@ -60,6 +60,8 @@ descubramos cómo transforma la complejidad de la concurrencia en una elegante
 solución para desarrolladores Java!
 
 ## Casos de uso
+Un caso en el que podemos usar ConcurrentHashMap es cuando tenemos un mapa que se comparte entre múltiples hilos. En este caso, ConcurrentHashMap es más rápido que Hashtable y BlockHashMap porque no requiere bloqueos para las operaciones de solo lectura.
+Casos reales son reserva de tickets en un concierto, habitaciones en un hotel, acceso simultáneo a servicios de almacenamiento en la nube, etc.
 ### Acceso Concurrente y Modificación Segura:
 ```java
 ConcurrentHashMap<String, Integer> map = new ConcurrentHashMap<>();
