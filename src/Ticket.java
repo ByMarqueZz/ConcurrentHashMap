@@ -5,12 +5,17 @@ public class Ticket {
     private AtomicBoolean reserved;
     private Customer customer;
 
+    /**
+     * Constructor de la clase Ticket
+     * @param id Identificador del ticket
+     */
     public Ticket(int id) {
         this.id = id;
         this.reserved = new AtomicBoolean(false);
         this.customer = null;
     }
 
+    // Getters y setters
     public int getId() {
         return id;
     }

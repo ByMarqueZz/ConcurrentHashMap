@@ -9,6 +9,7 @@ public class Customer extends Thread{
 
     @Override
     public void run() {
+        // El cliente intenta reservar un ticket
         concert.reservedTicket(this);
     }
 
